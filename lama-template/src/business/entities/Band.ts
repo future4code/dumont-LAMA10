@@ -15,15 +15,16 @@ export class Band {
     public getResponsible = (): string => this.responsible
 }
 
-export interface BandI {
+export interface BandInterface {
     id: string,
     name: string,
     genre: string,
     responsible: string
 }
 
-export interface InputBand {
+export interface BandInputDTO {
     name: string,
     genre: string,
-    responsible: string
+    responsible: string,
+    token: string
 }

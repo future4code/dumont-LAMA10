@@ -34,7 +34,7 @@ export class UserDatabase extends BaseDatabase {
             })
             .into(UserDatabase.TABLE_NAME);
       } catch (error) {
-         throw new CustomError(error.statusCode, error.sqlmessage)
+         throw new CustomError(error.statusCode, error.sqlMessage)
       }
    }
 
@@ -47,7 +47,7 @@ export class UserDatabase extends BaseDatabase {
 
          return UserDatabase.toUserModel(result[0]);
       } catch (error) {
-         throw new CustomError(error.statusCode, error.sqlmessage)
+         throw new CustomError(error.statusCode, error.sqlMessage)
       }
    }
 }

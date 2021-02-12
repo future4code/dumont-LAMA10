@@ -11,7 +11,7 @@ export class User {
 
 
    static stringToUserRole(input: string): UserRole {
-      switch (input) {
+      switch (input.toUpperCase()) {
          case "NORMAL":
             return UserRole.NORMAL;
          case "ADMIN":
