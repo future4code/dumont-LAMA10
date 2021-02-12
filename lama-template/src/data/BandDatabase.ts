@@ -9,7 +9,7 @@ export class BandDatabase extends BaseDatabase {
         return new Band(
             band.id,
             band.name,
-            band.genre,
+            band.music_genre,
             band.responsible
         )
     }

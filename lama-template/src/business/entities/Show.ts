@@ -14,7 +14,7 @@ export class Show {
     public getBandId = (): string => this.bandId;
 
     static stringToWeekDay(input: string): WeekDay {
-        switch (input) {
+        switch (input.toUpperCase()) {
             case "FRIDAY":
                 return WeekDay.FRIDAY;
             case "SATURDAY":
@@ -27,11 +27,12 @@ export class Show {
     }
 }
 
-export interface ShowDTO {
+export interface ShowInputDTO {
     bandId: string;
     weekDay: string;
     startTime: number;
     endTime: number;
+    token: string;
 }
 
 export interface ShowDB {
