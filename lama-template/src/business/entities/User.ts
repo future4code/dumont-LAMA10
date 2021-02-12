@@ -22,6 +22,14 @@ export class User {
    }
 }
 
+export interface UserDB {
+   id: string;
+   email: string;
+   password: string;
+   name: string;
+   role: string;
+}
+
 export interface UserInputDTO {
    email: string;
    password: string;

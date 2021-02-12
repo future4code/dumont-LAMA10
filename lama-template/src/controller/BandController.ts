@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { BandBusiness } from "../business/BandBusiness";
-import { BandInputDTO } from "../business/entities/Band";
+import { Band, BandInputDTO } from "../business/entities/Band";
 import { User } from "../business/entities/User";
 import { Authenticator } from "../business/services/Authenticator";
 import { IdGenerator } from "../business/services/IdGenerator";
@@ -30,7 +30,23 @@ export class BandController {
             res
                 .status(error.statusCode || 400)
                 .send({ error: error.message })
-    }
+        }
     }
 
+    public getBand = async (req: Request, res: Response): Promise<void> => {
+        try {
+            const info = req.query.name || req.query.id
+
+            const result: Band = await bandBusiness.getBand(String(info))
+
+            res.status(200)
+                .send(result)
+
+        } catch (error) {
+            res
+                .status(error.statusCode || 400)
+                .send({ error: error.message })
+        }
+
+    }
 }

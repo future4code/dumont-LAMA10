@@ -3,7 +3,7 @@ import { AuthenticationData, User, UserRole } from "./entities/User";
 import { CustomError } from "./error/CustomError";
 import { Authenticator } from "./services/Authenticator";
 import { IdGenerator } from "./services/IdGenerator";
-import { BandInputDTO } from "./entities/Band";
+import { Band, BandDB, BandInputDTO } from "./entities/Band";
 
 export class BandBusiness {
 
@@ -34,8 +34,27 @@ export class BandBusiness {
 
         const id: string = this.idGenerator.generate()
 
-        await this.bandDatabase.registerBand(
-            id, input.name, input.genre, input.responsible)
+        const newBand: BandDB = {
+            id: id,
+            name: input.name,
+            music_genre: input.genre,
+            responsible: input.responsible
+        }
+        await this.bandDatabase.registerBand(newBand)
+
+    }
+
+    public getBand = async (info: string): Promise<Band> => {
+
+        const result = await this.bandDatabase.getBand(info)
+
+        if (!result) {
+            throw new CustomError(404, "Not Found");
+        }
+
+        return result
+
 
     }
 }
+

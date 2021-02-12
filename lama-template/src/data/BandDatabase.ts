@@ -1,6 +1,6 @@
 import { CustomError } from "../business/error/CustomError";
 import { BaseDatabase } from "./BaseDatabase";
-import { Band } from "../business/entities/Band";
+import { Band, BandDB } from "../business/entities/Band";
 
 export class BandDatabase extends BaseDatabase {
     private static TABLE_NAME = "Bands_LAMA";
@@ -11,21 +11,13 @@ export class BandDatabase extends BaseDatabase {
             band.name,
             band.genre,
             band.responsible
-        );
+        )
     }
 
-    public registerBand = async (id: string,
-        name: string,
-        music_genre: string,
-        responsible: string): Promise<void> => {
+    public registerBand = async (band: BandDB): Promise<void> => {
         try {
             await BaseDatabase.connection
-                .insert({
-                    id,
-                    name,
-                    music_genre,
-                    responsible
-                })
+                .insert(band)
                 .into(BandDatabase.TABLE_NAME)
 
         } catch (error) {
@@ -33,21 +25,18 @@ export class BandDatabase extends BaseDatabase {
         }
     }
 
-    public getBand = async (
-        id: string,
-        name: string
-    ): Promise<any> => {
+    public getBand = async (info: string): Promise<any> => {
         try {
             const result = await BaseDatabase.connection
                 .select("*")
                 .from(BandDatabase.TABLE_NAME)
-                .where({ id })
-                .orWhere({ name })
+                .where('id', info)
+                .orWhere('name', info)
 
             return BandDatabase.toBandModel(result[0])
 
         } catch (error) {
-            throw new CustomError(error.statusCode, error.sqlmessage)
+            throw new CustomError(error.statusCode, error.sqlMessage)
         }
     }
 }

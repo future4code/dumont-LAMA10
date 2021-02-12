@@ -1,5 +1,5 @@
 import { BaseDatabase } from "./BaseDatabase";
-import { User } from "../business/entities/User";
+import { User, UserDB } from "../business/entities/User";
 import { CustomError } from "../business/error/CustomError";
 
 export class UserDatabase extends BaseDatabase {
@@ -17,21 +17,10 @@ export class UserDatabase extends BaseDatabase {
    }
 
    public createUser =  async (
-      id: string,
-      email: string,
-      name: string,
-      password: string,
-      role: string
-   ): Promise<void> => {
+      user: UserDB): Promise<void> => {
       try {
          await BaseDatabase.connection
-            .insert({
-               id,
-               email,
-               name,
-               password,
-               role
-            })
+            .insert(user)
             .into(UserDatabase.TABLE_NAME);
       } catch (error) {
          throw new CustomError(error.statusCode, error.sqlMessage)

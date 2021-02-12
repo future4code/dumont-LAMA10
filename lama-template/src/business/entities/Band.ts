@@ -15,10 +15,10 @@ export class Band {
     public getResponsible = (): string => this.responsible
 }
 
-export interface BandInterface {
+export interface BandDB {
     id: string,
     name: string,
-    genre: string,
+    music_genre: string,
     responsible: string
 }
 
