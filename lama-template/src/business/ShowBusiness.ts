@@ -18,7 +18,7 @@ export class ShowBusiness {
         const id = this.idGenerator.generate();
         const tokenData: AuthenticationData = this.authenticator.getData(input.token);
 
-        if(!input.bandId || !input.weekDay || !input.startTime || !input.endTime){
+        if (!input.bandId || !input.weekDay || !input.startTime || !input.endTime) {
             throw new CustomError(422, "Missing properties")
         }
         if (tokenData.role !== "ADMIN") {
@@ -50,10 +50,32 @@ export class ShowBusiness {
             week_day: Show.stringToWeekDay(input.weekDay),
             start_time: input.startTime,
             end_time: input.endTime,
-            band_id:input.bandId
-        } 
-            
+            band_id: input.bandId
+        }
+
         await this.showDataBase.createShow(newShow);
+    }
+
+    public async getShowByDay(day: string): Promise<any> {
+
+        if (!day) {
+            throw new CustomError(422, "Invalid day")
+        }
+        const queryData = await this.showDataBase.getShowByDay(
+            Show.stringToWeekDay(day)
+        )
+
+        const showSchedule = queryData.map((item: ShowDB) => {
+            return {
+                id: item.id,
+                weekDay: item.week_day,
+                startTime: item.start_time,
+                endTime: item.end_time,
+                bandId: item.band_id
+            }
+        })
+    
+        return showSchedule
 
     }
 }

@@ -1,7 +1,7 @@
 import express from "express";
 import { AddressInfo } from "net";
 import { bandRouter } from "./controller/routes/bandRouter";
-import { showRouter } from "./controller/routes/showController";
+import { showRouter } from "./controller/routes/showRouter";
 import { userRouter } from "./controller/routes/userRouter";
 
 const app = express()

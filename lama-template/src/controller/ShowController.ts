@@ -34,4 +34,17 @@ export class ShowController {
         }
     }
 
+    public getShowByDay = async (req: Request, res: Response): Promise<void> => {
+        try {
+          const day = String(req.query.day).toUpperCase();
+          const result = await showBusiness.getShowByDay(day);
+    
+          res.status(200).send({ result })
+        } catch (error) {
+            res
+                .status(error.statusCode || 400)
+                .send({ error: error.message })
+        }
+      }
+
 }
