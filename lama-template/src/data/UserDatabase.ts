@@ -1,10 +1,10 @@
 import { BaseDatabase } from "./BaseDatabase";
-import { User } from "../business/entities/User";
+import { User, UserDB } from "../business/entities/User";
 import { CustomError } from "../business/error/CustomError";
 
 export class UserDatabase extends BaseDatabase {
 
-   private static TABLE_NAME = "user";
+   private static TABLE_NAME = "Users_LAMA";
 
    private static toUserModel(user: any): User {
       return new User(
@@ -16,29 +16,18 @@ export class UserDatabase extends BaseDatabase {
       );
    }
 
-   public async createUser(
-      id: string,
-      email: string,
-      name: string,
-      password: string,
-      role: string
-   ): Promise<void> {
+   public createUser =  async (
+      user: UserDB): Promise<void> => {
       try {
          await BaseDatabase.connection
-            .insert({
-               id,
-               email,
-               name,
-               password,
-               role
-            })
+            .insert(user)
             .into(UserDatabase.TABLE_NAME);
       } catch (error) {
-         throw new CustomError(500, "An unexpected error ocurred");
+         throw new CustomError(error.statusCode, error.sqlMessage)
       }
    }
 
-   public async getUserByEmail(email: string): Promise<User> {
+   public getUserByEmail = async (email: string): Promise<User> => {
       try {
          const result = await BaseDatabase.connection
             .select("*")
@@ -47,7 +36,7 @@ export class UserDatabase extends BaseDatabase {
 
          return UserDatabase.toUserModel(result[0]);
       } catch (error) {
-         throw new CustomError(500, "An unexpected error ocurred");
+         throw new CustomError(error.statusCode, error.sqlMessage)
       }
    }
 }

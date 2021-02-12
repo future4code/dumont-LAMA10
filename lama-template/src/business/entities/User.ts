@@ -11,7 +11,7 @@ export class User {
 
 
    static stringToUserRole(input: string): UserRole {
-      switch (input) {
+      switch (input.toUpperCase()) {
          case "NORMAL":
             return UserRole.NORMAL;
          case "ADMIN":
@@ -20,6 +20,14 @@ export class User {
             throw new CustomError(422,"Invalid user role");
       }
    }
+}
+
+export interface UserDB {
+   id: string;
+   email: string;
+   password: string;
+   name: string;
+   role: string;
 }
 
 export interface UserInputDTO {

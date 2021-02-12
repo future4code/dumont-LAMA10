@@ -1,4 +1,4 @@
-import { UserInputDTO, LoginInputDTO } from "./entities/User";
+import { UserInputDTO, LoginInputDTO, UserDB } from "./entities/User";
 import { UserDatabase } from "../data/UserDatabase";
 import { IdGenerator } from "./services/IdGenerator";
 import { HashManager } from "./services/HashManager";
@@ -16,44 +16,45 @@ export class UserBusiness {
 
    async createUser(user: UserInputDTO) {
 
-      const id = this.idGenerator.generate();
+      const id = this.idGenerator.generate()
 
-      const hashPassword = await this.hashManager.hash(user.password);
+      const hashPassword = await this.hashManager.hash(user.password)
 
-      await this.userDatabase.createUser(
-         id,
-         user.email,
-         user.name,
-         hashPassword,
-         user.role
-      );
+      const newUser: UserDB = {
+         id: id,
+         email: user.email,
+         name: user.name,
+         password: hashPassword,
+         role: user.role
+      }
+      await this.userDatabase.createUser(newUser)
 
       const accessToken = this.authenticator.generateToken({
          id,
          role: user.role
       });
 
-      return accessToken;
+      return accessToken
    }
 
    async getUserByEmail(user: LoginInputDTO) {
 
-      const userFromDB = await this.userDatabase.getUserByEmail(user.email);
+      const userFromDB = await this.userDatabase.getUserByEmail(user.email)
 
       const passwordIsCorrect = await this.hashManager.compare(
          user.password,
          userFromDB.password
-      );
+      )
 
       const accessToken = this.authenticator.generateToken({
          id: userFromDB.id,
          role: userFromDB.role
-      });
+      })
 
       if (!passwordIsCorrect) {
-         throw new CustomError(401, "Invalid credentials!");
+         throw new CustomError(401, "Invalid credentials!")
       }
 
-      return accessToken;
+      return accessToken
    }
 }
