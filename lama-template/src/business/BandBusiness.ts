@@ -16,44 +16,51 @@ export class BandBusiness {
     public registerBand = async (
         input: BandInputDTO,
     ): Promise<void> => {
-        if (!input.name || !input.genre || !input.responsible) {
-            throw new CustomError(422, "Missing properties")
+        try {
+            if (!input.name || !input.genre || !input.responsible) {
+                throw new CustomError(422, "Missing properties")
+            }
+
+            if (!input.token) {
+                throw new CustomError(422, "Missing properties")
+            }
+
+            const tokenData: AuthenticationData = this.authenticator.getData(input.token)
+
+            const role: UserRole = User.stringToUserRole(tokenData.role!)
+
+            if (role === UserRole.NORMAL) {
+                throw new CustomError(401, "Not authorized")
+            }
+
+            const id: string = this.idGenerator.generate()
+
+            const newBand: BandDB = {
+                id: id,
+                name: input.name,
+                music_genre: input.genre,
+                responsible: input.responsible
+            }
+            await this.bandDatabase.registerBand(newBand)
+        } catch (error) {
+            throw new CustomError(error.statusCode, error.message);
         }
-
-        if (!input.token) {
-            throw new CustomError(422, "Missing properties")
-        }
-
-        const tokenData: AuthenticationData = this.authenticator.getData(input.token)
-
-        const role: UserRole = User.stringToUserRole(tokenData.role!)
-
-        if (role === UserRole.NORMAL) {
-            throw new CustomError(401, "Not authorized")
-        }
-
-        const id: string = this.idGenerator.generate()
-
-        const newBand: BandDB = {
-            id: id,
-            name: input.name,
-            music_genre: input.genre,
-            responsible: input.responsible
-        }
-        await this.bandDatabase.registerBand(newBand)
 
     }
 
     public getBand = async (info: string): Promise<Band> => {
 
-        const result = await this.bandDatabase.getBand(info)
+        try {
+            const result = await this.bandDatabase.getBand(info)
 
-        if (!result) {
-            throw new CustomError(404, "Not Found");
+            if (!result) {
+                throw new CustomError(404, "Not Found");
+            }
+
+            return result
+        } catch (error) {
+            throw new CustomError(error.statusCode, error.message);
         }
-
-        return result
-
 
     }
 }
