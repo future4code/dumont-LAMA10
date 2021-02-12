@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { BandBusiness } from "../business/BandBusiness";
 import { Band, BandInputDTO } from "../business/entities/Band";
-import { User } from "../business/entities/User";
 import { Authenticator } from "../business/services/Authenticator";
 import { IdGenerator } from "../business/services/IdGenerator";
 import { BandDatabase } from "../data/BandDatabase";
