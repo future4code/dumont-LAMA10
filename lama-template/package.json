@@ -1,12 +1,14 @@
 {
-   "name": "revisao-modulo5",
+   "name": "lama",
    "version": "1.0.0",
    "main": "index.js",
    "scripts": {
-      "start": "tsc && node ./build/src/index.js",
-      "test": "jest"
+      "setup": "tsc && node ./build/setup.js",
+      "test": "clear && echo \"Running tests...\" && jest",
+      "start": "tsc && node --inspect ./build/index.js",
+      "dev": " ts-node-dev ./src/index.ts"
    },
-   "author": "Labenu_",
+   "author": "Nicole Zolnier",
    "license": "ISC",
    "dependencies": {
       "bcryptjs": "^2.4.3",
@@ -15,7 +17,6 @@
       "jsonwebtoken": "^8.5.1",
       "jest": "^26.0.1",
       "knex": "^0.21.2",
-      "moment": "^2.27.0",
       "mysql": "^2.18.1",
       "uuid": "^8.2.0"
    },
