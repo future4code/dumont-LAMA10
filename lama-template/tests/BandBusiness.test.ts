@@ -15,7 +15,7 @@ const dataTokenRoleAdminMock = jest.fn((token: any): any =>{
     }
 })
 
-describe("Register band", () =>{
+describe("Testando register band", () =>{
     const roleAdmin = { getData: dataTokenRoleAdminMock } as any
     const roleNormal = { getData: dataTokenRoleNormalMock } as any
     const idGenerator = { generate: jest.fn() } as any
