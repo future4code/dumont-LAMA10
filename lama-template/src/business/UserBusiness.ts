@@ -15,46 +15,58 @@ export class UserBusiness {
    ) { }
 
    async createUser(user: UserInputDTO) {
+      try {
+         const id = this.idGenerator.generate()
 
-      const id = this.idGenerator.generate()
+         const hashPassword = await this.hashManager.hash(user.password)
 
-      const hashPassword = await this.hashManager.hash(user.password)
+         const newUser: UserDB = {
+            id: id,
+            email: user.email,
+            name: user.name,
+            password: hashPassword,
+            role: user.role
+         }
+         await this.userDatabase.createUser(newUser)
 
-      const newUser: UserDB = {
-         id: id,
-         email: user.email,
-         name: user.name,
-         password: hashPassword,
-         role: user.role
+         const accessToken = this.authenticator.generateToken({
+            id,
+            role: user.role
+         });
+
+         return accessToken
+      } catch (error) {
+         throw new CustomError(error.statusCode, error.message);
       }
-      await this.userDatabase.createUser(newUser)
-
-      const accessToken = this.authenticator.generateToken({
-         id,
-         role: user.role
-      });
-
-      return accessToken
    }
 
    async getUserByEmail(user: LoginInputDTO) {
+      try {
+         const userFromDB = await this.userDatabase.getUserByEmail(user.email)
 
-      const userFromDB = await this.userDatabase.getUserByEmail(user.email)
+         if (!userFromDB) {
+            throw new CustomError(401, "Invalid credentials!")
+         }
 
-      const passwordIsCorrect = await this.hashManager.compare(
-         user.password,
-         userFromDB.password
-      )
+         const passwordIsCorrect = await this.hashManager.compare(
+            user.password,
+            userFromDB.password
+         )
 
-      const accessToken = this.authenticator.generateToken({
-         id: userFromDB.id,
-         role: userFromDB.role
-      })
+         const accessToken = this.authenticator.generateToken({
+            id: userFromDB.id,
+            role: userFromDB.role
+         })
 
-      if (!passwordIsCorrect) {
-         throw new CustomError(401, "Invalid credentials!")
+         if (!passwordIsCorrect) {
+            throw new CustomError(401, "Invalid credentials!")
+         }
+
+         return accessToken
+
+      } catch (error) {
+         throw new CustomError(error.statusCode, error.message);
       }
 
-      return accessToken
    }
 }
