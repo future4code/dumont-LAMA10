@@ -49,6 +49,7 @@
 }
 ```
 **Body de resposta:** token
+
 ---------------------
 
 ## Bandas 
